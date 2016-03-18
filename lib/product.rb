@@ -18,17 +18,29 @@ class Product < Udacidata
   end
 
   def self.create(product_information={})
-      file = File.dirname(__FILE__) + "/../data/data.csv"
+      @file_path = File.dirname(__FILE__) + "/../data/data.csv"
       #@database_content = CSV.read(file)
       #puts @database_content.inspect
 
       @product = Product.new(product_information)
 
-      CSV.open(file, "ab") do |csv|
+      CSV.open(@file_path, "ab") do |csv|
       csv << [@product.id, @product.brand, @product.name, @product.price]
       end
 
       return @product      
+  end
+
+  def self.all
+    all_products = []
+
+    database_content = CSV.read(@file_path)
+    database_content.shift
+    database_content.each do |item|
+      all_products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
+    end
+
+    return all_products
   end
 
   private
