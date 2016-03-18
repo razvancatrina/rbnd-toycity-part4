@@ -103,6 +103,23 @@ class Product < Udacidata
     return products
   end
 
+  def update(params = {})
+    file_path = File.dirname(__FILE__) + "/../data/data.csv" 
+    data = CSV.table(file_path)
+    data.each do |row|
+      if row[:id] == @id
+        row[:price] = params[:price]
+        row[:brand] = params[:brand]
+      end
+    end
+
+    File.open(file_path, 'w') do |f|
+          f.write(data.to_csv)
+    end
+    
+    return Product.find(@id)
+  end
+
   private
 
     # Reads the last line of the data file, and gets the id if one exists
