@@ -80,6 +80,22 @@ class Product < Udacidata
       return Product.new({id: product[0], brand: product[1], name: product[2], price:product[3]})
   end
 
+  def self.destroy(product_id)
+      deleted_product = Product.find(product_id)
+      if deleted_product
+        data = CSV.table(@file_path)
+        data.delete_if do |row|
+          row[:id] == product_id
+        end
+        
+        File.open(@file_path, 'w') do |f|
+          f.write(data.to_csv)
+        end
+      end
+
+      return deleted_product
+  end
+
   private
 
     # Reads the last line of the data file, and gets the id if one exists
