@@ -97,8 +97,11 @@ class Product < Udacidata
       return deleted_product
   end
 
-  #def self.find_by_brand(brand_name)
-  #end
+  def self.where(params = {})
+    products = []
+    products = Product.all.select{ |item| item.brand == params[:brand]}
+    return products
+  end
 
   private
 
