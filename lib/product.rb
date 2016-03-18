@@ -42,14 +42,30 @@ class Product < Udacidata
     return all_products
   end
 
-  def self.first(*args)
-    if args.length == 0
+  def self.first(number_of_items = 0)
+    if number_of_items == 0
         item = CSV.read(@file_path).drop(1).first
         Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
     else
         products = []
 
-        data = CSV.read(@file_path).drop(1).slice(0, 3)
+        data = CSV.read(@file_path).drop(1).slice(0, number_of_items)
+        data.each do |item|
+          products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
+        end
+
+        return products
+    end
+  end
+
+  def self.last(number_of_items = 0)
+    if number_of_items == 0
+        item = CSV.read(@file_path).drop(1).last
+        Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
+    else
+        products = []
+
+        data = CSV.read(@file_path).drop(1).last(number_of_items)
         data.each do |item|
           products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
         end
