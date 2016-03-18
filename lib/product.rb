@@ -1,6 +1,7 @@
 require_relative 'udacidata'
 
 class Product < Udacidata
+  create_finder_methods :brand, :name
   attr_reader :id, :price, :brand, :name
 
   def initialize(opts={})
@@ -95,6 +96,9 @@ class Product < Udacidata
 
       return deleted_product
   end
+
+  #def self.find_by_brand(brand_name)
+  #end
 
   private
 
