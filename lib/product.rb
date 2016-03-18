@@ -34,13 +34,28 @@ class Product < Udacidata
   def self.all
     all_products = []
 
-    database_content = CSV.read(@file_path)
-    database_content.shift
+    database_content = CSV.read(@file_path).drop(1)
     database_content.each do |item|
       all_products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
     end
 
     return all_products
+  end
+
+  def self.first(*args)
+    if args.length == 0
+        item = CSV.read(@file_path).drop(1).first
+        Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
+    else
+        products = []
+
+        data = CSV.read(@file_path).drop(1).slice(0, 3)
+        data.each do |item|
+          products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
+        end
+
+        return products
+    end
   end
 
   private
