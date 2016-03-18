@@ -74,6 +74,12 @@ class Product < Udacidata
     end
   end
 
+  def self.find(product_id)
+      data = CSV.read(@file_path).drop(1)
+      product = data.select{ |item| item[0] == product_id.to_s}.first
+      return Product.new({id: product[0], brand: product[1], name: product[2], price:product[3]})
+  end
+
   private
 
     # Reads the last line of the data file, and gets the id if one exists
