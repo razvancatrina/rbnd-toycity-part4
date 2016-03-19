@@ -3,6 +3,7 @@ require_relative 'udacidata'
 class Product < Udacidata
   create_finder_methods :brand, :name
   attr_reader :id, :price, :brand, :name
+  @@file_path = File.dirname(__FILE__) + "/../data/data.csv"
 
   def initialize(opts={})
 
@@ -19,13 +20,9 @@ class Product < Udacidata
   end
 
   def self.create(product_information={})
-      @file_path = File.dirname(__FILE__) + "/../data/data.csv"
-      #@database_content = CSV.read(file)
-      #puts @database_content.inspect
-
       @product = Product.new(product_information)
 
-      CSV.open(@file_path, "ab") do |csv|
+      CSV.open(@@file_path, "a+") do |csv|
       csv << [@product.id, @product.brand, @product.name, @product.price]
       end
 
@@ -34,8 +31,7 @@ class Product < Udacidata
 
   def self.all
     all_products = []
-
-    database_content = CSV.read(@file_path).drop(1)
+    database_content = CSV.read(@@file_path).drop(1)
     database_content.each do |item|
       all_products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
     end
@@ -45,12 +41,12 @@ class Product < Udacidata
 
   def self.first(number_of_items = 0)
     if number_of_items == 0
-        item = CSV.read(@file_path).drop(1).first
+        item = CSV.read(@@file_path).drop(1).first
         Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
     else
         products = []
 
-        data = CSV.read(@file_path).drop(1).slice(0, number_of_items)
+        data = CSV.read(@@file_path).drop(1).slice(0, number_of_items)
         data.each do |item|
           products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
         end
@@ -61,12 +57,12 @@ class Product < Udacidata
 
   def self.last(number_of_items = 0)
     if number_of_items == 0
-        item = CSV.read(@file_path).drop(1).last
+        item = CSV.read(@@file_path).drop(1).last
         Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
     else
         products = []
 
-        data = CSV.read(@file_path).drop(1).last(number_of_items)
+        data = CSV.read(@@file_path).drop(1).last(number_of_items)
         data.each do |item|
           products << Product.new({id: item[0], brand: item[1], name: item[2], price:item[3]})
         end
@@ -76,7 +72,7 @@ class Product < Udacidata
   end
 
   def self.find(product_id)
-      data = CSV.read(@file_path).drop(1)
+      data = CSV.read(@@file_path).drop(1)
       product = data.select{ |item| item[0] == product_id.to_s}.first
       return Product.new({id: product[0], brand: product[1], name: product[2], price:product[3]})
   end
@@ -84,12 +80,12 @@ class Product < Udacidata
   def self.destroy(product_id)
       deleted_product = Product.find(product_id)
       if deleted_product
-        data = CSV.table(@file_path)
+        data = CSV.table(@@file_path)
         data.delete_if do |row|
           row[:id] == product_id
         end
         
-        File.open(@file_path, 'w') do |f|
+        File.open(@@file_path, 'w') do |f|
           f.write(data.to_csv)
         end
       end
@@ -108,8 +104,7 @@ class Product < Udacidata
   end
 
   def update(params = {})
-    file_path = File.dirname(__FILE__) + "/../data/data.csv" 
-    data = CSV.table(file_path)
+    data = CSV.table(@@file_path)
     data.each do |row|
       if row[:id] == @id
         row[:price] = params[:price]
@@ -117,7 +112,7 @@ class Product < Udacidata
       end
     end
 
-    File.open(file_path, 'w') do |f|
+    File.open(@@file_path, 'w') do |f|
           f.write(data.to_csv)
     end
     
