@@ -99,7 +99,11 @@ class Product < Udacidata
 
   def self.where(params = {})
     products = []
-    products = Product.all.select{ |item| item.brand == params[:brand]}
+    if params.keys[0].to_s == "brand"
+      products = Product.all.select{ |item| item.brand == params[params.keys[0]]}
+    elsif params.keys[0].to_s == "name"
+      products = Product.all.select{ |item| item.name == params[params.keys[0]]}
+    end
     return products
   end
 

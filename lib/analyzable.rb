@@ -29,10 +29,10 @@ module Analyzable
 
   def get_inventory_by_brand_report(product_list)
   	report_details = "Inventory by Brand:\n"
-  	brands = product_list.group_by {|i| i.brand}
+  	brands_details = count_by_brand(product_list)
   	
-  	brands.each do |key, value|
-  	report_details += "- #{key}: #{value.length}\n"
+  	brands_details.each do |key, value|
+  	report_details += "- #{key}: #{value}\n"
   	end
 
   	return report_details
@@ -40,12 +40,30 @@ module Analyzable
 
   def get_inventory_by_name_report(product_list)
   	report_details = "Inventory by Name:\n"
-  	brands = product_list.group_by {|i| i.name}
+  	brands_details = count_by_name(product_list)
   	
-  	brands.each do |key, value|
-  	report_details += "- #{key}: #{value.length}\n"
+  	brands_details.each do |key, value|
+  	report_details += "- #{key}: #{value}\n"
   	end
 
   	return report_details
+  end
+
+  def count_by_brand(product_list)
+  	brands = product_list.group_by {|i| i.brand}
+  	brands.each do |key, value|
+  		brands[key] = value.length
+  	end
+
+  	return brands
+  end
+
+  def count_by_name(product_list)
+  	products = product_list.group_by {|i| i.name}
+  	products.each do |key, value|
+  		products[key] = value.length
+  	end
+
+  	return products
   end
 end
