@@ -40,9 +40,9 @@ module Analyzable
 
   def get_inventory_by_name_report(product_list)
   	report_details = "Inventory by Name:\n"
-  	brands_details = count_by_name(product_list)
+  	name_details = count_by_name(product_list)
   	
-  	brands_details.each do |key, value|
+  	name_details.each do |key, value|
   	report_details += "- #{key}: #{value}\n"
   	end
 
