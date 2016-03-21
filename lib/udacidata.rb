@@ -107,8 +107,13 @@ class Udacidata
     data = CSV.table(@@file_path)
     data.each do |row|
       if row[:id] == @id
-        row[:price] = params[:price]
-        row[:brand] = params[:brand]
+        if params[:price]
+          row[:price] = params[:price]
+        end
+
+        if params[:brand]
+          row[:brand] = params[:brand]
+        end
       end
     end
 
